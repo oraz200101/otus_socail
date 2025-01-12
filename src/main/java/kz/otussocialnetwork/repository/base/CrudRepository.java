@@ -1,4 +1,17 @@
-package kz.otussocialnetwork.repository;
+package kz.otussocialnetwork.repository.base;
 
-public interface CrudRepository {
+import java.util.List;
+import java.util.Optional;
+import lombok.NonNull;
+
+public interface CrudRepository<T, ID> {
+  Optional<T> findById(@NonNull ID id);
+
+  List<T> findAll();
+
+  @NonNull T create(@NonNull T t);
+
+  @NonNull T update(@NonNull T t);
+
+  void deleteById(@NonNull ID id);
 }

@@ -1,9 +1,13 @@
 package kz.otussocialnetwork.security.context;
 
-import org.apache.catalina.User;
+import kz.otussocialnetwork.security.model.Authentication;
+import lombok.RequiredArgsConstructor;
 
-public class AuthContext {
+@RequiredArgsConstructor(staticName = "of")
+public class AuthContextImpl implements AuthContext {
+  private final Authentication auth;
 
-  ThreadLocal<User> userThreadLocal = new ThreadLocal<>();
-
+  @Override public Authentication getAuth() {
+    return this.auth;
+  }
 }

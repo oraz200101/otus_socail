@@ -13,6 +13,10 @@ java {
   }
 }
 
+ext {
+  set('jsonwebtokenVersion', "0.12.6")
+}
+
 configurations {
   compileOnly {
     extendsFrom annotationProcessor
@@ -24,17 +28,39 @@ repositories {
 }
 
 dependencies {
+  // region spring
   implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-  implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.boot:spring-boot-starter-web'
+  // endregion spring
+
+  // region flyway
   implementation 'org.flywaydb:flyway-core'
   implementation 'org.flywaydb:flyway-database-postgresql'
+  // endregion flyway
+
+  // region jsonwebtoken
+  runtimeOnly "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
+  implementation "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
+  runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
+  // endregion jsonwebtoken
+
+  // region jetbrains annotations
+  implementation 'org.jetbrains:annotations:26.0.1'
+  // endregion jetbrains annotation
+
+  // region lombok
   compileOnly 'org.projectlombok:lombok'
-  runtimeOnly 'org.postgresql:postgresql'
   annotationProcessor 'org.projectlombok:lombok'
+  // endregion lombok
+
+  // region postgresql
+  runtimeOnly 'org.postgresql:postgresql'
+  // endregion postgresql
+
+  // region test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  testImplementation 'org.springframework.security:spring-security-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+  // endregion test
 }
 
 tasks.named('test') {
