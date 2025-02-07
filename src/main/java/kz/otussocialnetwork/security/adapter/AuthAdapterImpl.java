@@ -18,4 +18,8 @@ public class AuthAdapterImpl implements AuthAdapter {
   @Override public Authentication getAuthentication() {
     return authContextHolder.getContext().getAuth();
   }
+
+  @Override public void clearAuthentication() {
+    authContextHolder.clearContext();
+  }
 }

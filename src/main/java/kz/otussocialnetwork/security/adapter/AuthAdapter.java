@@ -7,4 +7,6 @@ public interface AuthAdapter {
   void setAuthentication(Authentication authentication);
 
   Authentication getAuthentication();
+
+  void clearAuthentication();
 }

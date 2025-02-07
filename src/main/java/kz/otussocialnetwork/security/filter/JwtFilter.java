@@ -46,6 +46,10 @@ public class JwtFilter extends OncePerRequestFilter {
       throw new TokenInvalidException("TGXodWzhJ", "token invalid");
     }
 
-    filterChain.doFilter(request, response);
+    try {
+      filterChain.doFilter(request, response);
+    } finally {
+      authAdapter.clearAuthentication();
+    }
   }
 }
