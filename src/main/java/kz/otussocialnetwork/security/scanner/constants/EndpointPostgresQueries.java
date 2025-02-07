@@ -6,7 +6,8 @@ public class EndpointPostgresQueries {
 
   @Language("PostgreSQL")
   public static final String CREATE_ENDPOINT =
-    "INSERT INTO endpoints (" +
+    "INSERT INTO otus_social.endpoints (" +
+      "id, " +
       "url, " +
       "method_name, " +
       "access_roles, " +
@@ -16,15 +17,15 @@ public class EndpointPostgresQueries {
       "authenticated, " +
       "permit_all" +
       ") " +
-      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   @Language("PostgreSQL")
   public static final String FIND_ENDPOINT_BY_ID =
-    "SELECT id FROM endpoints WHERE id = ?";
+    "SELECT * FROM otus_social.endpoints WHERE id = ?";
 
   @Language("PostgreSQL")
   public static final String UPDATE_ENDPOINT =
-    "UPDATE endpoints " +
+    "UPDATE otus_social.endpoints " +
       "SET url = ?, " +
       "    method_name = ?, " +
       "    access_roles = ?, " +
@@ -37,9 +38,9 @@ public class EndpointPostgresQueries {
 
   @Language("PostgreSQL")
   public static final String FIND_ENDPOINTS =
-    "SELECT * FROM endpoints";
+    "SELECT * FROM otus_social.endpoints";
 
   @Language("PostgreSQL")
   public static final String DELETE_ENDPOINT =
-    "DELETE FROM endpoints WHERE id = ?";
+    "DELETE FROM otus_social.endpoints WHERE id = ?";
 }

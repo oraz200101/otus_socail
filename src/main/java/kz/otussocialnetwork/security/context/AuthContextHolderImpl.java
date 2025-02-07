@@ -1,9 +1,11 @@
 package kz.otussocialnetwork.security.context;
 
 import lombok.NonNull;
+import org.springframework.stereotype.Component;
 
-public class AuthContextHolderImpl implements AuthContextHolder, AutoCloseable {
-  private static final ThreadLocal<AuthContext> authContextThreadLocal = new ThreadLocal<>();
+@Component
+public class AuthContextHolderImpl implements AuthContextHolder {
+  private final ThreadLocal<AuthContext> authContextThreadLocal = new ThreadLocal<>();
 
   @Override public void clearContext() {
     authContextThreadLocal.remove();
@@ -15,9 +17,5 @@ public class AuthContextHolderImpl implements AuthContextHolder, AutoCloseable {
 
   @Override public AuthContext getContext() {
     return authContextThreadLocal.get();
-  }
-
-  @Override public void close() {
-    clearContext();
   }
 }

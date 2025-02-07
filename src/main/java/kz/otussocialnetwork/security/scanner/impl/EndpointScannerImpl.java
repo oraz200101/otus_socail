@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import kz.otussocialnetwork.security.scanner.EndpointScanner;
 import kz.otussocialnetwork.security.scanner.annotation.DefaultAccess;
@@ -50,7 +51,7 @@ public class EndpointScannerImpl implements EndpointScanner {
                                .toList();
   }
 
-  private List<Endpoint> collectEndpointsOfController(Class<?> controller) {
+  private List<Endpoint> collectEndpointsOfController(@NonNull Class<?> controller) {
     String requestMappingPath = getRequestMappingPath(controller);
 
     List<Method> methods = Arrays.stream(controller.getMethods())
@@ -66,6 +67,8 @@ public class EndpointScannerImpl implements EndpointScanner {
                                   @NonNull Method method) {
     Endpoint.EndpointBuilder builder = Endpoint.builder();
 
+
+    builder.id(UUID.randomUUID());
     setMethodName(method, builder);
     setRequestMethod(method, builder);
     setDefaultAccessParams(method, builder);
@@ -131,7 +134,7 @@ public class EndpointScannerImpl implements EndpointScanner {
     }
   }
 
-  private boolean isRequestAnnotationPresent(Method method) {
+  private boolean isRequestAnnotationPresent(@NonNull Method method) {
     return method.isAnnotationPresent(GetMapping.class)
       || method.isAnnotationPresent(PostMapping.class)
       || method.isAnnotationPresent(PutMapping.class)

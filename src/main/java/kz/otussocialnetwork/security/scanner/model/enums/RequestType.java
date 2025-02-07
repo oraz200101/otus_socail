@@ -1,6 +1,5 @@
 package kz.otussocialnetwork.security.scanner.model.enums;
 
-import java.util.Set;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

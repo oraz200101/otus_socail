@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import kz.otussocialnetwork.model.enums.Role;
@@ -15,6 +16,7 @@ import kz.otussocialnetwork.security.jwt.exception.TokenInvalidTypeException;
 import kz.otussocialnetwork.security.jwt.properties.JwtProperties;
 import kz.otussocialnetwork.security.jwt.provider.JwtTokenProvider;
 import kz.otussocialnetwork.utils.DateUtil;
+import kz.otussocialnetwork.utils.UUIDUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,11 +36,11 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     this.secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
   }
 
-  @Override public @NonNull String createAccessToken(@NonNull Long userId, @NonNull Set<@NonNull Role> roles) {
+  @Override public @NonNull String createAccessToken(@NonNull UUID userId, @NonNull Set<@NonNull Role> roles) {
     Claims claims = Jwts.claims()
                         .subject(userId.toString())
                         .add(ROLES, resolveRoles(roles))
-                        .add(TOKEN_TYPE_KEY, TokenType.REFRESH.name())
+                        .add(TOKEN_TYPE_KEY, TokenType.ACCESS.name())
                         .build();
 
     LocalDateTime expiration = LocalDateTime.now().plusHours(jwtProperties.getAccess());
@@ -50,7 +52,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
                .compact();
   }
 
-  @Override public @NonNull String createRefreshToken(@NonNull Long userId , @NonNull Set<@NonNull Role> roles) {
+  @Override public @NonNull String createRefreshToken(@NonNull UUID userId, @NonNull Set<@NonNull Role> roles) {
     Claims claims = Jwts.claims()
                         .subject(userId.toString())
                         .add(TOKEN_TYPE_KEY, TokenType.REFRESH.name())
@@ -79,10 +81,8 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
 
     return claims.getPayload()
                  .getExpiration()
-                 .before(DateUtil.toDate(LocalDateTime.now()));
+                 .after(DateUtil.toDate(LocalDateTime.now()));
   }
-
-
 
   @Override public boolean validateRefreshToken(@NonNull String refreshToken) {
     Jws<Claims> claims = Jwts.parser()
@@ -98,10 +98,19 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
 
     return claims.getPayload()
                  .getExpiration()
-                 .before(DateUtil.toDate(LocalDateTime.now()));
+                 .after(DateUtil.toDate(LocalDateTime.now()));
   }
 
-  private @NonNull Set<@NonNull String> resolveRoles(@NonNull Set<@NonNull Role> roles) {
+  @Override public @NonNull UUID getUserId(@NonNull String token) {
+    Jws<Claims> claims = Jwts.parser()
+                             .verifyWith(secretKey)
+                             .build()
+                             .parseSignedClaims(token);
+
+    return UUIDUtil.fromString(claims.getPayload().getSubject());
+  }
+
+  public @NonNull Set<@NonNull String> resolveRoles(@NonNull Set<@NonNull Role> roles) {
     return roles.stream()
                 .map(Enum::name)
                 .collect(Collectors.toSet());

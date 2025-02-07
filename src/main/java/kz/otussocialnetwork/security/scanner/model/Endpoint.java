@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import kz.otussocialnetwork.model.enums.Role;
 import kz.otussocialnetwork.security.scanner.model.enums.RequestType;
@@ -18,7 +19,7 @@ import org.springframework.jdbc.core.RowMapper;
 @NoArgsConstructor
 @Builder
 public class Endpoint {
-  public Long        id;
+  public UUID        id;
   public String      url;
   public String      methodName;
   public RequestType requestType;
@@ -26,8 +27,8 @@ public class Endpoint {
   public boolean     authenticated            = false;
   public boolean     permitAll                = false;
 
-  public Set<Role>   defaultAccessRoles       = new HashSet<>();
-  public Set<Role>   accessRoles              = new HashSet<>();
+  public Set<Role> defaultAccessRoles = new HashSet<>();
+  public Set<Role> accessRoles        = new HashSet<>();
 
   public static final class PgFields {
     public static final String id                       = "id";
@@ -47,7 +48,7 @@ public class Endpoint {
     @Override public Endpoint mapRow(ResultSet rs, int rowNum) throws SQLException {
       Endpoint endpoint = new Endpoint();
 
-      endpoint.id                       = rs.getLong(PgFields.id);
+      endpoint.id                       = rs.getObject(PgFields.id, UUID.class);
       endpoint.url                      = rs.getString(PgFields.url);
       endpoint.methodName               = rs.getString(PgFields.methodName);
       endpoint.requestType              = RequestType.valueOf(rs.getString(PgFields.requestType));
@@ -56,6 +57,7 @@ public class Endpoint {
       endpoint.permitAll                = rs.getBoolean(PgFields.permitAll);
       endpoint.accessRoles              = getRoles(rs, PgFields.accessRoles);
       endpoint.defaultAccessRoles       = getRoles(rs, PgFields.defaultAccessRoles);
+
       return endpoint;
     }
 
