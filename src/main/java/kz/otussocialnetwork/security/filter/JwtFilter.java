@@ -2,7 +2,6 @@ package kz.otussocialnetwork.security.filter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kz.otussocialnetwork.security.adapter.AuthAdapter;
-import kz.otussocialnetwork.security.jwt.exception.TokenInvalidException;
 import kz.otussocialnetwork.security.jwt.provider.JwtTokenProvider;
 import kz.otussocialnetwork.security.model.Authentication;
 import kz.otussocialnetwork.security.scanner.model.Endpoint;

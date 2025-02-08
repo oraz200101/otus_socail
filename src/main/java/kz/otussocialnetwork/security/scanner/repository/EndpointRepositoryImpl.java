@@ -8,6 +8,7 @@ import kz.otussocialnetwork.security.scanner.model.Endpoint;
 import kz.otussocialnetwork.security.scanner.model.enums.RequestType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -137,6 +138,7 @@ public class EndpointRepositoryImpl implements EndpointRepository {
     namedParameterJdbcTemplate.update(DELETE_ENDPOINTS, parameters);
   }
 
+  @Cacheable(value = "endpoints", key = "#url + ':' + #type")
   @Override public Optional<Endpoint> findByUrlAndType(@NonNull String url, @NonNull RequestType type) {
     Endpoint endpoint = jdbcTemplate.queryForObject(
       FIND_BY_URL_AND_TYPE,

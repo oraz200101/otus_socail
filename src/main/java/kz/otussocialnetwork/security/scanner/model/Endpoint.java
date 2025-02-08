@@ -1,5 +1,6 @@
 package kz.otussocialnetwork.security.scanner.model;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ import org.springframework.jdbc.core.RowMapper;
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
 @Builder
-public class Endpoint {
+public class Endpoint implements Serializable {
   public UUID        id;
   public String      url;
   public String      methodName;
