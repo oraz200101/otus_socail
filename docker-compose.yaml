@@ -27,3 +27,14 @@ services:
       - "docker-entrypoint.sh"
       - "-c"
       - "max-connections=800"
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    mem_limit: 200M
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 150mb --maxmemory-policy allkeys-lru
+    volumes:
+      - ~/volumes/otus-social-network/redis-data:/data

@@ -43,4 +43,12 @@ public class EndpointPostgresQueries {
   @Language("PostgreSQL")
   public static final String DELETE_ENDPOINT =
     "DELETE FROM otus_social.endpoints WHERE id = ?";
+
+  @Language("PostgreSQL")
+  public static final String DELETE_ENDPOINTS =
+  "DELETE FROM otus_social.endpoints WHERE id in (:ids)";
+
+  @Language("PostgreSQL")
+  public static final String FIND_BY_URL_AND_TYPE =
+  "SELECT * FROM otus_social.endpoints WHERE url = ? AND request_type = ?";
 }

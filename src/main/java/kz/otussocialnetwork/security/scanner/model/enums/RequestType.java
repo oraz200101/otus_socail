@@ -24,4 +24,15 @@ public enum RequestType {
       default -> throw new IllegalArgumentException("tuMxVwLU :: Unsupported annotation: " + annotationName);
     };
   }
+
+  public static RequestType fromName(@NonNull String name) {
+    return switch (name) {
+      case "GET" -> RequestType.GET;
+      case "POST" -> RequestType.POST;
+      case "PUT" -> RequestType.PUT;
+      case "PATCH" -> RequestType.PATCH;
+      case "DELETE" -> RequestType.DELETE;
+      default -> throw new IllegalArgumentException("h85jofD :: Unsupported annotation: " + name);
+    };
+  }
 }

@@ -27,6 +27,7 @@ public class Endpoint {
   public boolean     authenticated            = false;
   public boolean     permitAll                = false;
 
+
   public Set<Role> defaultAccessRoles = new HashSet<>();
   public Set<Role> accessRoles        = new HashSet<>();
 
@@ -37,7 +38,7 @@ public class Endpoint {
     public static final String accessRoles              = "access_roles";
     public static final String requestType              = "request_type";
     public static final String defaultAccessRoles       = "default_access_roles";
-    public static final String activeDefaultAccessRoles = "active_default_access_roles";
+    public static final String activeDefaultAccessRoles = "active_defaultaccess_roles";
     public static final String authenticated            = "authenticated";
     public static final String permitAll                = "permit_all";
   }

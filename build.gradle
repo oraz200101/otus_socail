@@ -61,6 +61,11 @@ dependencies {
   implementation 'org.springframework.security:spring-security-crypto'
   // endregion crypto
 
+  //region redis
+  implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+  implementation 'org.springframework.boot:spring-boot-starter-cache'
+  //endregion redis
+
   // region test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

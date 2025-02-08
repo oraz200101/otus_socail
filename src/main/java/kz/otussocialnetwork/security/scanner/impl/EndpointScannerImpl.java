@@ -3,14 +3,16 @@ package kz.otussocialnetwork.security.scanner.impl;
 import jakarta.annotation.PostConstruct;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import kz.otussocialnetwork.security.scanner.EndpointScanner;
-import kz.otussocialnetwork.security.scanner.annotation.DefaultAccess;
+import kz.otussocialnetwork.security.scanner.annotation.AccessMetaData;
 import kz.otussocialnetwork.security.scanner.model.Endpoint;
 import kz.otussocialnetwork.security.scanner.model.enums.RequestType;
 import kz.otussocialnetwork.security.scanner.repository.EndpointRepository;
@@ -38,6 +40,12 @@ public class EndpointScannerImpl implements EndpointScanner {
 
   @PostConstruct
   @Override public void scanSave() {
+    Set<UUID> endpoints = endpointRepository.findAll()
+                                            .stream()
+                                            .map(endpoint -> endpoint.id)
+                                            .collect(Collectors.toSet());
+
+    endpointRepository.deleteAll(endpoints);
     endpointRepository.createListBatch(scan());
   }
 
@@ -67,8 +75,6 @@ public class EndpointScannerImpl implements EndpointScanner {
                                   @NonNull Method method) {
     Endpoint.EndpointBuilder builder = Endpoint.builder();
 
-
-    builder.id(UUID.randomUUID());
     setMethodName(method, builder);
     setRequestMethod(method, builder);
     setDefaultAccessParams(method, builder);
@@ -123,14 +129,21 @@ public class EndpointScannerImpl implements EndpointScanner {
 
   private void setDefaultAccessParams(@NonNull Method method,
                                       @NonNull Endpoint.EndpointBuilder endpointBuilder) {
-    if (method.isAnnotationPresent(DefaultAccess.class)) {
-      DefaultAccess defaultAccess = method.getAnnotation(DefaultAccess.class);
+    if (method.isAnnotationPresent(AccessMetaData.class)) {
+      AccessMetaData accessMetaData = method.getAnnotation(AccessMetaData.class);
 
-      endpointBuilder.defaultAccessRoles(Arrays.stream(defaultAccess.defaultAccessRoles())
+      if (accessMetaData.id().isEmpty()) {
+        throw new RuntimeException("crG4izXm4 :: can't scan endpoint because id doesn't set");
+      }
+
+      endpointBuilder.id(UUID.fromString(accessMetaData.id()));
+      endpointBuilder.defaultAccessRoles(Arrays.stream(accessMetaData.defaultAccessRoles())
                                                .collect(Collectors.toSet()));
 
-      endpointBuilder.authenticated(defaultAccess.defaultAuthenticated());
-      endpointBuilder.permitAll(defaultAccess.defaultPermitAll());
+      endpointBuilder.authenticated(accessMetaData.defaultAuthenticated());
+      endpointBuilder.permitAll(accessMetaData.defaultPermitAll());
+    } else {
+      throw new RuntimeException("qbdV1wlzIk :: can't scan endpoint metadata doesn't set" + method);
     }
   }
 

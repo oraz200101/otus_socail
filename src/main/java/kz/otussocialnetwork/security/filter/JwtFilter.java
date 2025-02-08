@@ -1,37 +1,40 @@
 package kz.otussocialnetwork.security.filter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import kz.otussocialnetwork.security.adapter.AuthAdapter;
 import kz.otussocialnetwork.security.jwt.exception.TokenInvalidException;
 import kz.otussocialnetwork.security.jwt.provider.JwtTokenProvider;
+import kz.otussocialnetwork.security.model.Authentication;
+import kz.otussocialnetwork.security.scanner.model.Endpoint;
+import kz.otussocialnetwork.security.scanner.model.enums.RequestType;
+import kz.otussocialnetwork.security.scanner.repository.EndpointRepository;
 import kz.otussocialnetwork.service.AuthService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
-  private final JwtTokenProvider jwtTokenProvider;
-  private final AuthService      authService;
-  private final AuthAdapter      authAdapter;
+public class JwtFilter implements HttpFilter {
+  private final AuthAdapter        authAdapter;
+  private final AuthService        authService;
+  private final JwtTokenProvider   jwtTokenProvider;
+  private final int                order = 0;
+  private final EndpointRepository endpointRepository;
 
-  @Override
-  protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                  @NonNull HttpServletResponse response,
-                                  @NonNull FilterChain filterChain) throws ServletException, IOException {
-    String requestURI = request.getRequestURI();
+  @Override public void accept(@NonNull HttpRequestMetadata metadata) {
+    HttpServletRequest request = metadata.request;
 
-    if (requestURI.startsWith("/api/v1/user/create")
-      || requestURI.startsWith("/api/v1/auth/log-in")
-    ) {
-      filterChain.doFilter(request, response);
-      return;
+    String      requestUri = metadata.request.getRequestURI();
+    RequestType methodName = RequestType.fromName(metadata.request.getMethod());
+
+    Endpoint endpoint = endpointRepository.findByUrlAndType(requestUri, methodName)
+                                          .orElseThrow(() -> new RuntimeException("8cktT4f :: Endpoint not found"));
+
+    if (endpoint.permitAll) {
+      metadata.endpoint    = endpoint;
+      metadata.skipCurrent = true;
     }
 
     String bearerToken = request.getHeader("Authorization");
@@ -41,15 +44,17 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     if (bearerToken != null && jwtTokenProvider.validateAccessToken(bearerToken)) {
-      authAdapter.setAuthentication(authService.getAuthentication(bearerToken));
-    } else {
-      throw new TokenInvalidException("TGXodWzhJ", "token invalid");
+      Authentication authentication = authService.getAuthentication(bearerToken);
+      metadata.authentication = authentication;
+      authAdapter.setAuthentication(authentication);
     }
+  }
 
-    try {
-      filterChain.doFilter(request, response);
-    } finally {
-      authAdapter.clearAuthentication();
-    }
+  @Override public int order() {
+    return order;
+  }
+
+  @Override public int compareTo(@NotNull HttpFilter other) {
+    return Integer.compare(order, other.order());
   }
 }

@@ -2,16 +2,22 @@ package kz.otussocialnetwork.security.scanner.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import kz.otussocialnetwork.security.scanner.model.Endpoint;
+import kz.otussocialnetwork.security.scanner.model.enums.RequestType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.CREATE_ENDPOINT;
 import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.DELETE_ENDPOINT;
+import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.DELETE_ENDPOINTS;
+import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.FIND_BY_URL_AND_TYPE;
 import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.FIND_ENDPOINTS;
 import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.FIND_ENDPOINT_BY_ID;
 import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQueries.UPDATE_ENDPOINT;
@@ -19,7 +25,8 @@ import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQu
 @Repository
 @RequiredArgsConstructor
 public class EndpointRepositoryImpl implements EndpointRepository {
-  private final JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate               jdbcTemplate;
+  private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
   @Override public Optional<Endpoint> findById(@NonNull UUID id) {
     Endpoint endpoint = jdbcTemplate.queryForObject(
@@ -98,4 +105,46 @@ public class EndpointRepositoryImpl implements EndpointRepository {
     }
   }
 
+  @Override
+  public void updateListBatch(@NonNull List<Endpoint> endpoints) {
+    final int batchSize = 500;
+
+    for (int i = 0; i < endpoints.size(); i += batchSize) {
+      List<Endpoint> batch = endpoints.subList(i, Math.min(i + batchSize, endpoints.size()));
+
+      jdbcTemplate.batchUpdate(UPDATE_ENDPOINT, batch, batch.size(), (ps, endpoint) -> {
+        ps.setString(1, endpoint.url);
+        ps.setString(2, endpoint.methodName);
+        ps.setArray(3, ps.getConnection().createArrayOf(
+          "text", endpoint.accessRoles.stream().map(Enum::name).toArray()
+        ));
+        ps.setString(4, endpoint.requestType.name());
+        ps.setArray(5, ps.getConnection().createArrayOf(
+          "text", endpoint.defaultAccessRoles.stream().map(Enum::name).toArray()
+        ));
+        ps.setBoolean(6, endpoint.activeDefaultAccessRoles);
+        ps.setBoolean(7, endpoint.authenticated);
+        ps.setBoolean(8, endpoint.permitAll);
+        ps.setObject(9, endpoint.id);
+      });
+    }
+  }
+
+  @Override public void deleteAll(@NonNull Set<UUID> endpointIds) {
+    MapSqlParameterSource parameters = new MapSqlParameterSource();
+    parameters.addValue("ids", endpointIds);
+
+    namedParameterJdbcTemplate.update(DELETE_ENDPOINTS, parameters);
+  }
+
+  @Override public Optional<Endpoint> findByUrlAndType(@NonNull String url, @NonNull RequestType type) {
+    Endpoint endpoint = jdbcTemplate.queryForObject(
+      FIND_BY_URL_AND_TYPE,
+      Endpoint.EnpointRowMapper.of(),
+      url,
+      type.name()
+    );
+
+    return Optional.ofNullable(endpoint);
+  }
 }

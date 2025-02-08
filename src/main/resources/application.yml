@@ -12,6 +12,9 @@ spring:
       idle-timeout: 30000
       connection-timeout: 30000
       pool-name: PostgresHikariCP
+  redis-properties:
+    host: localhost
+    port: 6379
 
 security:
   jwt:
@@ -22,3 +25,7 @@ server:
   port: 8080
   servlet:
     context-path: /api
+  tomcat:
+    threads:
+      max: 1
+      min-spare: 0
