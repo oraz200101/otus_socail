@@ -10,45 +10,45 @@ public class StrUtil {
     return str == null || str.isEmpty() || str.trim().isEmpty();
   }
 
-  public static boolean hasUpperLetter(String str) {
+  public static boolean hasNotUpperLetter(String str) {
     if (isNullOrEmpty(str)) {
-      return false;
+      return true;
     }
 
     for (char c : str.toCharArray()) {
       if (Character.isUpperCase(c)) {
-        return true;
+        return false;
       }
     }
 
-    return false;
+    return true;
   }
 
-  public static boolean hasLowLetter(String str) {
+  public static boolean hasNotLowLetter(String str) {
     if (isNullOrEmpty(str)) {
-      return false;
+      return true;
     }
 
     for (char c : str.toCharArray()) {
       if (Character.isLowerCase(c)) {
-        return true;
+        return false;
       }
     }
 
-    return false;
+    return true;
   }
 
-  public static boolean hasDigit(String str) {
+  public static boolean hasNotDigit(String str) {
     if (isNullOrEmpty(str)) {
-      return false;
+      return true;
     }
 
     for (char c : str.toCharArray()) {
       if (Character.isDigit(c)) {
-        return true;
+        return false;
       }
     }
 
-    return false;
+    return true;
   }
 }

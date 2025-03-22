@@ -25,15 +25,15 @@ public class UserValidation {
       throw new ValidationException("M5OYWWb", "user password is required");
     }
 
-    if (!StrUtil.hasUpperLetter(request.password)){
+    if (StrUtil.hasNotUpperLetter(request.password)){
       throw new ValidationException("51NUlZ02SK", "user password must contain upper letter");
     }
 
-    if (!StrUtil.hasLowLetter(request.password)){
+    if (StrUtil.hasNotLowLetter(request.password)){
       throw new ValidationException("84fFX1iCZz", "user password must contain lower letter");
     }
 
-    if (!StrUtil.hasDigit(request.password)){
+    if (StrUtil.hasNotDigit(request.password)){
       throw new ValidationException("zme6lFPAZkr", "user password must contain digit");
     }
   }
@@ -55,15 +55,15 @@ public class UserValidation {
       throw new ValidationException("wxu4SxcUotl", "user password is required");
     }
 
-    if (!StrUtil.hasUpperLetter(request.password)){
+    if (StrUtil.hasNotUpperLetter(request.password)){
       throw new ValidationException("FBbXMK2K3", "user password must contain upper letter");
     }
 
-    if (!StrUtil.hasLowLetter(request.password)){
+    if (StrUtil.hasNotLowLetter(request.password)){
       throw new ValidationException("L2KLNad", "user password must contain lower letter");
     }
 
-    if (!StrUtil.hasDigit(request.password)){
+    if (StrUtil.hasNotDigit(request.password)){
       throw new ValidationException("gjAA03v3hzx", "user password must contain digit");
     }
   }
