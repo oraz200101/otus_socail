@@ -64,7 +64,8 @@ public class UserRepositoryImpl implements UserRepository {
       userEntity.birthDate,
       userEntity.biography,
       userEntity.city,
-      userEntity.password
+      userEntity.password,
+      userEntity.id
     );
 
   }

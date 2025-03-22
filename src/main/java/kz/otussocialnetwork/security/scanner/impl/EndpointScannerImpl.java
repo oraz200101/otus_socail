@@ -45,8 +45,9 @@ public class EndpointScannerImpl implements EndpointScanner {
 
     if (!endpoints.isEmpty()) {
       endpointRepository.deleteAll(endpoints);
-      endpointRepository.createListBatch(scan());
     }
+
+    endpointRepository.createListBatch(scan());
   }
 
   @Override public @NonNull List<@NonNull Endpoint> scan() {
