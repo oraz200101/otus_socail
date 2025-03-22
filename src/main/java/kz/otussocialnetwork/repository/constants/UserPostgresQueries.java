@@ -37,4 +37,8 @@ public class UserPostgresQueries {
       "city = ?, " +
       "password = ? " +
       "WHERE id = ?";
+
+  @Language("PostgreSQL")
+  public static final String DELETE_USER_BY_ID =
+    "DELETE FROM otus_social.users WHERE id = ?";
 }

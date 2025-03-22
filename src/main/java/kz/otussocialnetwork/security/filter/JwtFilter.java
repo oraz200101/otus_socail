@@ -1,6 +1,7 @@
 package kz.otussocialnetwork.security.filter;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kz.otussocialnetwork.exception.NotFoundException;
 import kz.otussocialnetwork.security.adapter.AuthAdapter;
 import kz.otussocialnetwork.security.jwt.provider.JwtTokenProvider;
 import kz.otussocialnetwork.security.model.Authentication;
@@ -29,7 +30,7 @@ public class JwtFilter implements HttpFilter {
     RequestType methodName = RequestType.fromName(metadata.request.getMethod());
 
     Endpoint endpoint = endpointRepository.findByUrlAndType(requestUri, methodName)
-                                          .orElseThrow(() -> new RuntimeException("8cktT4f :: Endpoint not found"));
+                                          .orElseThrow(() -> new NotFoundException("8cktT4f", "Endpoint not found"));
 
     if (endpoint.permitAll) {
       metadata.endpoint    = endpoint;

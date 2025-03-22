@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import static kz.otussocialnetwork.repository.constants.UserPostgresQueries.CREATE_USER;
+import static kz.otussocialnetwork.repository.constants.UserPostgresQueries.DELETE_USER_BY_ID;
 import static kz.otussocialnetwork.repository.constants.UserPostgresQueries.FIND_USER_BY_ID;
 import static kz.otussocialnetwork.repository.constants.UserPostgresQueries.FIND_USER_BY_USERNAME;
 import static kz.otussocialnetwork.repository.constants.UserPostgresQueries.UPDATE_USER;
@@ -17,13 +18,14 @@ import static kz.otussocialnetwork.repository.constants.UserPostgresQueries.UPDA
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
-  private final JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate             jdbcTemplate;
+  private final UserEntity.UserRowMapper userRowMapper;
 
   @Override
   public Optional<UserEntity> findById(@NonNull UUID id) {
     UserEntity userEntity = jdbcTemplate.queryForObject(
       FIND_USER_BY_ID,
-      UserEntity.EnpointRowMapper.of(),
+      userRowMapper,
       id
     );
 
@@ -53,7 +55,7 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   @Override
-  public @NonNull UserEntity update(@NonNull UserEntity userEntity) {
+  public void update(@NonNull UserEntity userEntity) {
     jdbcTemplate.update(
       UPDATE_USER,
       userEntity.username,
@@ -65,18 +67,17 @@ public class UserRepositoryImpl implements UserRepository {
       userEntity.password
     );
 
-    return userEntity;
   }
 
   @Override
   public void deleteById(@NonNull UUID id) {
-    String sql = "DELETE FROM "  + " WHERE id = ?";
+    jdbcTemplate.update(DELETE_USER_BY_ID, id);
   }
 
   @Override public Optional<UserEntity> findByUsername(@NonNull String username) {
     UserEntity userEntity = jdbcTemplate.queryForObject(
       FIND_USER_BY_USERNAME,
-      UserEntity.EnpointRowMapper.of(),
+      userRowMapper,
       username
     );
 

@@ -45,8 +45,10 @@ public class EndpointScannerImpl implements EndpointScanner {
                                             .map(endpoint -> endpoint.id)
                                             .collect(Collectors.toSet());
 
-    endpointRepository.deleteAll(endpoints);
-    endpointRepository.createListBatch(scan());
+    if (!endpoints.isEmpty()) {
+      endpointRepository.deleteAll(endpoints);
+      endpointRepository.createListBatch(scan());
+    }
   }
 
   @Override public @NonNull List<@NonNull Endpoint> scan() {

@@ -11,7 +11,7 @@ public interface CrudRepository<T, ID> {
 
   @NonNull T create(@NonNull T t);
 
-  @NonNull T update(@NonNull T t);
+  void update(@NonNull T t);
 
   void deleteById(@NonNull ID id);
 }

@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
@@ -44,7 +45,7 @@ public class Endpoint implements Serializable {
     public static final String permitAll                = "permit_all";
   }
 
-  @NoArgsConstructor(staticName = "of")
+  @Component
   public static final class EnpointRowMapper implements RowMapper<Endpoint> {
 
     @Override public Endpoint mapRow(ResultSet rs, int rowNum) throws SQLException {

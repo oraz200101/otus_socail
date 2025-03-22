@@ -26,5 +26,3 @@ CREATE TABLE otus_social.users
 );
 
 CREATE INDEX idx_endpoint_url ON otus_social.endpoints (url);
-
-

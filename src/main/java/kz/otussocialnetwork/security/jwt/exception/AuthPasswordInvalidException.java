@@ -4,8 +4,8 @@ import lombok.NonNull;
 
 public class AuthPasswordInvalidException extends RuntimeException {
 
-  public AuthPasswordInvalidException(@NonNull String place, @NonNull String message) {
-    super(place + " :: " + message);
+  public AuthPasswordInvalidException(@NonNull String placeId, @NonNull String message) {
+    super(placeId + " :: " + message);
   }
 
 }

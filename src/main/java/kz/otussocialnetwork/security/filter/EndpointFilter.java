@@ -1,6 +1,7 @@
 package kz.otussocialnetwork.security.filter;
 
 import java.util.Objects;
+import kz.otussocialnetwork.security.jwt.exception.AccessDeniedException;
 import kz.otussocialnetwork.security.model.Authentication;
 import kz.otussocialnetwork.security.scanner.model.Endpoint;
 import lombok.NonNull;
@@ -26,7 +27,7 @@ public class EndpointFilter implements HttpFilter {
     if (!endpoint.defaultAccessRoles.isEmpty()
       && endpoint.defaultAccessRoles.stream()
                                     .noneMatch(authentication.roles::contains)) {
-      throw new RuntimeException("7qQIFLcCu :: Access denied");
+      throw new AccessDeniedException("7qQIFLcCu", "Access denied");
     }
   }
 

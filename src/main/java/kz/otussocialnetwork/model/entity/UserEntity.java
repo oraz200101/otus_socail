@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 @AllArgsConstructor(staticName = "of")
 @NoArgsConstructor
@@ -61,7 +62,8 @@ public class UserEntity {
   }
 
   @NoArgsConstructor(staticName = "of")
-  public static final class EnpointRowMapper implements RowMapper<UserEntity> {
+  @Component
+  public static final class UserRowMapper implements RowMapper<UserEntity> {
 
     @Override public UserEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
       UserEntity userEntity = new UserEntity();

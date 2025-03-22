@@ -28,11 +28,12 @@ import static kz.otussocialnetwork.security.scanner.constants.EndpointPostgresQu
 public class EndpointRepositoryImpl implements EndpointRepository {
   private final JdbcTemplate               jdbcTemplate;
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+  private final Endpoint.EnpointRowMapper enpointRowMapper;
 
   @Override public Optional<Endpoint> findById(@NonNull UUID id) {
     Endpoint endpoint = jdbcTemplate.queryForObject(
       FIND_ENDPOINT_BY_ID,
-      Endpoint.EnpointRowMapper.of(),
+      enpointRowMapper,
       id
     );
 
@@ -40,7 +41,7 @@ public class EndpointRepositoryImpl implements EndpointRepository {
   }
 
   @Override public List<Endpoint> findAll() {
-    return jdbcTemplate.query(FIND_ENDPOINTS, Endpoint.EnpointRowMapper.of());
+    return jdbcTemplate.query(FIND_ENDPOINTS, enpointRowMapper);
   }
 
   @Transactional
@@ -61,7 +62,7 @@ public class EndpointRepositoryImpl implements EndpointRepository {
   }
 
   @Transactional
-  @Override public @NonNull Endpoint update(@NonNull Endpoint endpoint) {
+  @Override public void update(@NonNull Endpoint endpoint) {
     jdbcTemplate.update(
       UPDATE_ENDPOINT,
       endpoint.url,
@@ -74,7 +75,6 @@ public class EndpointRepositoryImpl implements EndpointRepository {
       endpoint.id
     );
 
-    return endpoint;
   }
 
   @Override public void deleteById(@NonNull UUID id) {
@@ -142,7 +142,7 @@ public class EndpointRepositoryImpl implements EndpointRepository {
   @Override public Optional<Endpoint> findByUrlAndType(@NonNull String url, @NonNull RequestType type) {
     Endpoint endpoint = jdbcTemplate.queryForObject(
       FIND_BY_URL_AND_TYPE,
-      Endpoint.EnpointRowMapper.of(),
+      enpointRowMapper,
       url,
       type.name()
     );
