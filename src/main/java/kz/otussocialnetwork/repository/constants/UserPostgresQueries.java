@@ -41,4 +41,13 @@ public class UserPostgresQueries {
   @Language("PostgreSQL")
   public static final String DELETE_USER_BY_ID =
     "DELETE FROM otus_social.users WHERE id = ?";
+
+  @Language("PostgreSQL")
+  public static final String SEARCH_USER_BY_FIRSTNAME_AND_SECOND_NAME =
+    "SELECT * FROM otus_social.users WHERE first_name LIKE ? AND second_name LIKE ?";
+
+  @Language("PostgreSQL")
+  public static final String FIND_ALL_USERS =
+    "SELECT * FROM otus_social.users";
+
 }

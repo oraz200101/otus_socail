@@ -1,5 +1,6 @@
 package kz.otussocialnetwork.controller;
 
+import java.util.List;
 import kz.otussocialnetwork.model.dto.UserProfileResponse;
 import kz.otussocialnetwork.model.dto.UserSignInRequest;
 import kz.otussocialnetwork.model.dto.UserSignInResponse;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,6 +28,13 @@ public class UserController {
   @AccessMetaData(id = "d2de2da7-6179-4e0d-9fe4-4dd55d6acbf6")
   public ResponseEntity<UserProfileResponse> getUserProfile() {
     return ResponseEntity.ok(userService.getProfile());
+  }
+
+  @GetMapping("/search")
+  @AccessMetaData(id = "c146d8df-7d6a-4a44-96f8-133287844868")
+  public ResponseEntity<List<UserProfileResponse>> searchByFirstNameOrSecondName(@RequestParam String firstName,
+                                                                                 @RequestParam String secondName) {
+    return ResponseEntity.ok(userService.searchByFirstNameAndSecondName(firstName, secondName));
   }
 
   @PostMapping("/create")

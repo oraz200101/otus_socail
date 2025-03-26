@@ -51,4 +51,8 @@ public class StrUtil {
 
     return true;
   }
+
+  public static String nullToEmpty(String str) {
+    return str == null ? "" : str;
+  }
 }

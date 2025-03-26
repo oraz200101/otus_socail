@@ -29,3 +29,7 @@ server:
     threads:
       max: 1
       min-spare: 0
+migration:
+  file-url: src/main/resources/
+  file-name: users.csv
+  is-active: false
