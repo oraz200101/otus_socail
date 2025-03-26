@@ -27,9 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Log4j2
 public class UserServiceImpl implements UserService {
+  private final AuthAdapter     authAdapter;
   private final UserRepository  userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final AuthAdapter     authAdapter;
 
   @Transactional
   @Override public UserSignInResponse signIn(@NonNull UserSignInRequest request) {

@@ -1,7 +1,11 @@
 package kz.otussocialnetwork.model.dto;
 
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UserSignInRequest {
   public String    username;
   public String    firstName;

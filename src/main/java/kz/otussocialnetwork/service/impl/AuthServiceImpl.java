@@ -2,6 +2,7 @@ package kz.otussocialnetwork.service.impl;
 
 import java.util.Set;
 import java.util.UUID;
+import kz.otussocialnetwork.exception.NotFoundException;
 import kz.otussocialnetwork.model.dto.AuthResponse;
 import kz.otussocialnetwork.model.entity.UserEntity;
 import kz.otussocialnetwork.model.enums.Role;
@@ -25,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override public AuthResponse login(@NonNull String username, @NonNull String password) {
     UserEntity entity = userRepository.findByUsername(username)
-                                      .orElseThrow();
+                                      .orElseThrow(() -> new NotFoundException("f9gRnOFyMx2", "User was not found"));
 
     if (!passwordEncoder.matches(password, entity.password)) {
       throw new AuthPasswordInvalidException("Avb3wrK", "auth password incorrect");
