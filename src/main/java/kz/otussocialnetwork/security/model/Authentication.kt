@@ -1,12 +1,9 @@
-package kz.otussocialnetwork.security.model;
+package kz.otussocialnetwork.security.model
 
-import java.util.Set;
-import java.util.UUID;
-import kz.otussocialnetwork.model.enums.Role;
-import lombok.AllArgsConstructor;
+import kz.otussocialnetwork.model.enums.Role
+import java.util.UUID
 
-@AllArgsConstructor(staticName = "of")
-public class Authentication {
-  public UUID      userId;
-  public Set<Role> roles;
-}
+data class Authentication(
+    val userId: UUID,
+    val roles: Set<Role>
+)

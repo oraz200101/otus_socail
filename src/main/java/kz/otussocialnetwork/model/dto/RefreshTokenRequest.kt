@@ -1,5 +1,5 @@
 package kz.otussocialnetwork.model.dto;
 
-public class RefreshTokenRequest {
-  public String refreshToken;
-}
+data class RefreshTokenRequest(
+    val refreshToken: String
+)

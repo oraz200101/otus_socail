@@ -1,5 +1,6 @@
 plugins {
   id 'java'
+  id 'org.jetbrains.kotlin.jvm' version '2.1.0'
   id 'org.springframework.boot' version '3.4.1'
   id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -33,6 +34,10 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-aop'
   // endregion spring
+
+  // region kotlin
+  implementation "org.jetbrains.kotlin:kotlin-stdlib"
+  // endregion kotlin
 
   // region flyway
   implementation 'org.flywaydb:flyway-core'

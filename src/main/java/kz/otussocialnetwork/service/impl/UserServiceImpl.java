@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
   @Override public UserProfileResponse getProfile() {
     Authentication authentication = authAdapter.getAuthentication();
 
-    UserEntity userEntity = userRepository.findById(authentication.userId)
+    UserEntity userEntity = userRepository.findById(authentication.getUserId())
                                           .orElseThrow(() -> new NotFoundException("Er84YPTAvw", "User was not found"));
 
     return UserProfileResponse.fromEntity(userEntity);

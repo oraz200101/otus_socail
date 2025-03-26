@@ -26,7 +26,7 @@ public class EndpointFilter implements HttpFilter {
 
     if (!endpoint.defaultAccessRoles.isEmpty()
       && endpoint.defaultAccessRoles.stream()
-                                    .noneMatch(authentication.roles::contains)) {
+                                    .noneMatch(authentication.getRoles()::contains)) {
       throw new AccessDeniedException("7qQIFLcCu", "Access denied");
     }
   }

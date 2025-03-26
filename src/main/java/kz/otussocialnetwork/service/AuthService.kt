@@ -1,15 +1,15 @@
-package kz.otussocialnetwork.service;
+package kz.otussocialnetwork.service
 
-import kz.otussocialnetwork.model.dto.AuthResponse;
-import kz.otussocialnetwork.security.model.Authentication;
-import lombok.NonNull;
+import kz.otussocialnetwork.model.dto.AuthResponse
+import kz.otussocialnetwork.security.model.Authentication
 
-public interface AuthService {
+interface AuthService {
+    fun login(
+        username: String,
+        password: String
+    ): AuthResponse
 
-  AuthResponse login(@NonNull String username,
-                     @NonNull String password);
+    fun refreshToken(refreshToken: String): AuthResponse
 
-  AuthResponse refreshToken(@NonNull String accessToken);
-
-  Authentication getAuthentication(@NonNull String accessToken);
+    fun getAuthentication(accessToken: String): Authentication
 }
