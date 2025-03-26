@@ -3,6 +3,8 @@ package kz.otussocialnetwork.service.impl;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
+import kz.otussocialnetwork.annotation.LogExecution;
+import kz.otussocialnetwork.annotation.enums.ExecutionTimeType;
 import kz.otussocialnetwork.exception.NotFoundException;
 import kz.otussocialnetwork.model.dto.UserProfileResponse;
 import kz.otussocialnetwork.model.dto.UserSignInRequest;
@@ -65,17 +67,13 @@ public class UserServiceImpl implements UserService {
     return UserProfileResponse.fromEntity(userEntity);
   }
 
+  @LogExecution(placeId = "NVgsQkTQ", needExecutionTime = true, executionTimeType = ExecutionTimeType.MILLISECONDS)
   @Override public List<UserProfileResponse> searchByFirstNameAndSecondName(@Nullable String firstName,
                                                                             @Nullable String secondName) {
-    long start = System.currentTimeMillis();
-
     List<UserEntity> userEntityList = userRepository.findByFirstNameAndSecondName(
       StrUtil.nullToEmpty(firstName),
       StrUtil.nullToEmpty(secondName)
     );
-
-    long end = System.currentTimeMillis();
-    log.info("Pw23UvkJa :: find user executed in {} ms", end - start);
 
     return userEntityList.stream()
                          .map(UserProfileResponse::fromEntity)
